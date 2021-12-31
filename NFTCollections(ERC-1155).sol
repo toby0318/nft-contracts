@@ -1186,6 +1186,7 @@ contract Terraworld is ERC1155, Ownable {
     _mint(msg.sender, _id, _amount, _uri, "");
     _hashExists[_hash] = true;
     _tokenOwnerCount[_id] = 1;
+    _tokenOwner[_id][msg.sender] = true;
     emit minting(_id, _hash, _uri, _amount);
   }
 
