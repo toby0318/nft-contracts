@@ -1150,6 +1150,9 @@ contract Terraworld is ERC1155, Ownable {
   // Mapping from hash to NFT token ID
   mapping (string => address) private _hashToken;
 
+  //minting event
+  event minting(uint256 id, string indexed hash, string indexed uri, uint256 amount);
+
   constructor(string memory _collectionName, string memory _collectionUri) public ERC1155(_collectionUri) {
       collectionName = _collectionName;
   }
@@ -1174,14 +1177,16 @@ contract Terraworld is ERC1155, Ownable {
         }
     }
 
-  function mint(string memory _hash, string memory _uri, uint256 amount) public {
+  function mint(string memory _hash, string memory _uri, uint256 _amount) public {
     require(!_hashExists[_hash], "Token is already minted");
     require(bytes(_uri).length > 0, "uri should be set");
-    require(amount > 0, "amount has to be greater than 0.");
+    require(_amount > 0, "amount has to be greater than 0.");
     hashes.push(_hash);
     uint _id = hashes.length - 1;
-    _mint(msg.sender, _id, 1, _uri, "");
+    _mint(msg.sender, _id, _amount, _uri, "");
     _hashExists[_hash] = true;
+    _tokenOwnerCount[_id] = 1;
+    emit minting(_id, _hash, _uri, _amount);
   }
 
   function getCount() public view returns(uint256 count) {
