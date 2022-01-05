@@ -1144,8 +1144,10 @@ contract Terraworld is ERC1155, Ownable {
 
   // Mapping from NFT token ID to owners
   mapping (uint256 => mapping(address=>bool)) public _tokenOwner;
-  // Mapping from NFT token ID to number of token owners
-  mapping (uint256 => uint256) public _tokenOwnerCount;
+  // Mapping from NFT token ID to token owners
+  mapping (uint256 => address[]) public _tokenOwners;
+  // Mapping from users to NFT token IDs
+  mapping (address => uint256[]) public _tokenIDs;
 
   // Mapping from hash to NFT token ID
   mapping (string => address) private _hashToken;
@@ -1166,14 +1168,32 @@ contract Terraworld is ERC1155, Ownable {
     ) public override {
         if(balanceOf(to, id) == 0)
         {
-            _tokenOwnerCount[id]++;
-            _tokenOwner[id][from] = true;
+            _tokenOwner[id][to] = true;
+            _tokenOwners[id].push(to);
+            _tokenIDs[to].push(id);
         }
         super.safeTransferFrom(from, to, id, amount, data);
         if(balanceOf(from, id) == 0)
         {
-            _tokenOwnerCount[id]--;
             _tokenOwner[id][from] = false;
+            address[] storage owners = _tokenOwners[id];
+            for(uint i = 0; i < owners.length; i++)
+            {
+                if(owners[i] == from)
+                {
+                    owners[i] = owners[owners.length-1];
+                    owners.pop();
+                }
+            }
+            uint256[] storage ids = _tokenIDs[from];
+            for(uint i = 0; i < ids.length; i++)
+            {
+                if(ids[i] == id)
+                {
+                    ids[i] = ids[ids.length-1];
+                    ids.pop();
+                }
+            }
         }
     }
 
@@ -1185,8 +1205,9 @@ contract Terraworld is ERC1155, Ownable {
     uint _id = hashes.length - 1;
     _mint(msg.sender, _id, _amount, _uri, "");
     _hashExists[_hash] = true;
-    _tokenOwnerCount[_id] = 1;
+    _tokenOwners[_id].push(msg.sender);
     _tokenOwner[_id][msg.sender] = true;
+    _tokenIDs[msg.sender].push(_id);
     emit minting(_id, _hash, _uri, _amount);
   }
 
@@ -1200,5 +1221,13 @@ contract Terraworld is ERC1155, Ownable {
 
   function setTokenUri(uint256 _tokenId, string memory _uri) public onlyOwner {
     _setTokenURI(_tokenId, _uri);
+  }
+
+  function getTokenIDs(address owner) external view returns(uint256[] memory){
+      return _tokenIDs[owner];
+  }
+
+  function getTokenOwners(uint256 id) external view returns(address[] memory){
+      return _tokenOwners[id];
   }
 }

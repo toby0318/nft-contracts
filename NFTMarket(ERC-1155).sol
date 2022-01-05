@@ -243,8 +243,144 @@ interface IDiscountManager {
     function getDiscount(address buyer) external view returns (uint256 discount);
 }
 
+/**
+ * @dev Interface of the ERC165 standard, as defined in the
+ * https://eips.ethereum.org/EIPS/eip-165[EIP].
+ *
+ * Implementers can declare support of contract interfaces, which can then be
+ * queried by others ({ERC165Checker}).
+ *
+ * For an implementation, see {ERC165}.
+ */
+interface IERC165 {
+    /**
+     * @dev Returns true if this contract implements the interface defined by
+     * `interfaceId`. See the corresponding
+     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[EIP section]
+     * to learn more about how these ids are created.
+     *
+     * This function call must use less than 30 000 gas.
+     */
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
 
-contract NFTMarket is ReentrancyGuard {
+
+
+/**
+ * @dev Implementation of the {IERC165} interface.
+ *
+ * Contracts may inherit from this and call {_registerInterface} to declare
+ * their support of an interface.
+ */
+contract ERC165 is IERC165 {
+    /*
+     * bytes4(keccak256('supportsInterface(bytes4)')) == 0x01ffc9a7
+     */
+    bytes4 private constant _INTERFACE_ID_ERC165 = 0x01ffc9a7;
+
+    /**
+     * @dev Mapping of interface ids to whether or not it's supported.
+     */
+    mapping(bytes4 => bool) private _supportedInterfaces;
+
+    constructor (){
+        // Derived contracts need only register support for their own interfaces,
+        // we register support for ERC165 itself here
+        _registerInterface(_INTERFACE_ID_ERC165);
+    }
+
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     *
+     * Time complexity O(1), guaranteed to always use less than 30 000 gas.
+     */
+    function supportsInterface(bytes4 interfaceId) public view override returns (bool) {
+        return _supportedInterfaces[interfaceId];
+    }
+
+    /**
+     * @dev Registers the contract as an implementer of the interface defined by
+     * `interfaceId`. Support of the actual ERC165 interface is automatic and
+     * registering its interface id is not required.
+     *
+     * See {IERC165-supportsInterface}.
+     *
+     * Requirements:
+     *
+     * - `interfaceId` cannot be the ERC165 invalid interface (`0xffffffff`).
+     */
+    function _registerInterface(bytes4 interfaceId) internal virtual {
+        require(interfaceId != 0xffffffff, "ERC165: invalid interface id");
+        _supportedInterfaces[interfaceId] = true;
+    }
+}
+
+/**
+ * _Available since v3.1._
+ */
+abstract contract NFTReceiver is ERC165 {
+
+    /**
+        @dev Handles the receipt of a single ERC1155 token type. This function is
+        called at the end of a `safeTransferFrom` after the balance has been updated.
+        To accept the transfer, this must return
+        `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))`
+        (i.e. 0xf23a6e61, or its own function selector).
+        @param operator The address which initiated the transfer (i.e. msg.sender)
+        @param from The address which previously owned the token
+        @param id The ID of the token being transferred
+        @param value The amount of tokens being transferred
+        @param data Additional data with no specified format
+        @return `bytes4(keccak256("onERC1155Received(address,address,uint256,uint256,bytes)"))` if transfer is allowed
+    */
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
+    ) external virtual returns(bytes4) {
+        return this.onERC1155Received.selector;
+    }
+
+    /**
+        @dev Handles the receipt of a multiple ERC1155 token types. This function
+        is called at the end of a `safeBatchTransferFrom` after the balances have
+        been updated. To accept the transfer(s), this must return
+        `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))`
+        (i.e. 0xbc197c81, or its own function selector).
+        @param operator The address which initiated the batch transfer (i.e. msg.sender)
+        @param from The address which previously owned the token
+        @param ids An array containing ids of each token being transferred (order and length must match values array)
+        @param values An array containing amounts of each token being transferred (order and length must match ids array)
+        @param data Additional data with no specified format
+        @return `bytes4(keccak256("onERC1155BatchReceived(address,address,uint256[],uint256[],bytes)"))` if transfer is allowed
+    */
+    function onERC1155BatchReceived(
+        address operator,
+        address from,
+        uint256[] calldata ids,
+        uint256[] calldata values,
+        bytes calldata data
+    ) external virtual returns(bytes4) {
+        return this.onERC1155BatchReceived.selector;
+    }
+    /**
+     * @dev Whenever an {IERC721} `tokenId` token is transferred to this contract via {IERC721-safeTransferFrom}
+     * by `operator` from `from`, this function is called.
+     *
+     * It must return its Solidity selector to confirm the token transfer.
+     * If any other value is returned or the interface is not implemented by the recipient, the transfer will be reverted.
+     *
+     * The selector can be obtained in Solidity with `IERC721.onERC721Received.selector`.
+     */
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external virtual returns (bytes4){
+        return this.onERC721Received.selector;
+    }
+}
+
+
+contract NFTMarket is ReentrancyGuard,NFTReceiver {
     
     using SafeMath for uint256;
     
@@ -288,6 +424,8 @@ contract NFTMarket is ReentrancyGuard {
         address payable seller;
         address payable buyer;
         string category;
+        uint8 kind; // 0:fixed price sale ,1: available for auction
+        bool hasAmount; // true: erc1155, false: erc721
         uint256 price;
         bool isSold;
         bool cancelled;
@@ -305,6 +443,8 @@ contract NFTMarket is ReentrancyGuard {
         address seller,
         address owner,
         string category,
+        uint8 kind,
+        bool hasAmount,
         uint256 price
     );
     
@@ -359,7 +499,10 @@ contract NFTMarket is ReentrancyGuard {
         
         idToMarketItem[itemId].seller.transfer(saleAmount);
         
-        IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this),  bidder, tokenId, idToMarketItem[itemId].amount, "");
+        if(idToMarketItem[itemId].hasAmount)
+            IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this),  bidder, tokenId, idToMarketItem[itemId].amount, "");
+        else
+            IERC721(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this),  bidder, tokenId);
         
         idToMarketItem[itemId].isSold = true;
         idToMarketItem[itemId].buyer = payable(bidder);
@@ -441,6 +584,8 @@ contract NFTMarket is ReentrancyGuard {
         address nftContract,
         uint256 tokenId,
         uint256 amount,
+        uint8 kind,
+        bool hasAmount,
         uint256 price,
         string calldata category
     ) public payable nonReentrant {
@@ -456,11 +601,16 @@ contract NFTMarket is ReentrancyGuard {
             payable(msg.sender),
             payable(address(0)), // No owner for the item
             category,
+            kind,
+            hasAmount,
             price,
             false,
             false
         );
-        IERC1155(nftContract).safeTransferFrom(msg.sender, address(this), tokenId, amount, "");
+        if(hasAmount)
+            IERC1155(nftContract).safeTransferFrom(msg.sender, address(this), tokenId, amount, "");
+        else
+            IERC721(nftContract).safeTransferFrom(msg.sender, address(this), tokenId);
         contractToTokenToItemId[nftContract][tokenId].push(itemId);
 
         emit MarketItemCreated(
@@ -470,6 +620,8 @@ contract NFTMarket is ReentrancyGuard {
             msg.sender,
             address(0),
             category,
+            kind,
+            hasAmount,
             price
         );
     }
@@ -482,7 +634,10 @@ contract NFTMarket is ReentrancyGuard {
         require(IERC1155(idToMarketItem[itemId].nftContract).balanceOf(address(this), idToMarketItem[itemId].tokenId) > 0); // should never fail
         idToMarketItem[itemId].cancelled=true;
          _itemsCancelled.increment();
-        IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].amount, "");
+        if(idToMarketItem[itemId].hasAmount)
+            IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].amount, "");
+        else
+            IERC721(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, idToMarketItem[itemId].tokenId);
         uint256[] storage marketItems = contractToTokenToItemId[idToMarketItem[itemId].nftContract][idToMarketItem[itemId].tokenId];
         for(uint i =0; i <= marketItems.length; i++)
         {
@@ -524,7 +679,10 @@ contract NFTMarket is ReentrancyGuard {
         
         uint256 saleAmount = price.sub(fees);
         idToMarketItem[itemId].seller.transfer(saleAmount);
-        IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, tokenId, amount, "");
+        if(idToMarketItem[itemId].hasAmount)
+            IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, tokenId, amount, "");
+        else
+            IERC721(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, tokenId);
         idToMarketItem[itemId].isSold = true;
         idToMarketItem[itemId].buyer = payable(msg.sender);
         _itemsSold.increment();
@@ -676,7 +834,9 @@ contract NFTMarket is ReentrancyGuard {
         discountManager = _discountManager;
     }
     
-    
+    function getItemIDsForToken(address token, uint256 tokenID) external view returns (uint256[] memory){
+        return contractToTokenToItemId[token][tokenID];
+    }
 }
 
 
