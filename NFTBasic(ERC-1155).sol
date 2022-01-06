@@ -1138,7 +1138,7 @@ contract Terraworld is ERC1155, Ownable {
   // Hashes of meme pictures on IPFS
   string[] public hashes;
   // CollectionName
-  string public collectionName;
+  string public name;
   // Mapping for enforcing unique hashes
   mapping(string => bool) _hashExists;
 
@@ -1155,8 +1155,8 @@ contract Terraworld is ERC1155, Ownable {
   //minting event
   event minting(uint256 id, string indexed hash, string indexed uri, uint256 amount);
 
-  constructor(string memory _collectionName, string memory _collectionUri) public ERC1155(_collectionUri) {
-      collectionName = _collectionName;
+  constructor(string memory _name, string memory _collectionUri) public ERC1155(_collectionUri) {
+      name = _name;
   }
 
   function safeTransferFrom(

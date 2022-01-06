@@ -397,13 +397,16 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
 
     Counters.Counter private _offerIds; // Tracking offers
 
-    address payable public owner; // The owner of the NFTMarket contract 
+    address public owner; // The owner of the NFTMarket contract 
     address public discountManager = address(0x0); // a contract that can be callled to discover if there is a discount on the transaction fee.
 
     uint256 public saleFeePercentage = 5; // Percentage fee paid to team for each sale
     uint256 public volumeTraded = 0; // Total amount traded
+    uint256 public totalSellerFee = 0; // Total fee from sellers
+    uint8 public sellerFee = 0; // 10: 1%, 100: 10% 
 
     constructor() {
+        owner = msg.sender;
     }
 
 
@@ -590,6 +593,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         string calldata category
     ) public payable nonReentrant {
         require(price > 0, "No item for free here");
+        require(msg.value >= price.mul(sellerFee).div(1000), "You have to pay seller fee");
 
         _itemIds.increment();
         uint256 itemId = _itemIds.current();
@@ -836,6 +840,14 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
     
     function getItemIDsForToken(address token, uint256 tokenID) external view returns (uint256[] memory){
         return contractToTokenToItemId[token][tokenID];
+    }
+
+    function setSellerFee(uint8 _fee) external onlyOwner {
+        sellerFee = _fee;
+    }
+
+    function withDraw() external onlyOwner {
+        payable(owner).transfer(payable(address(this)).balance);
     }
 }
 
