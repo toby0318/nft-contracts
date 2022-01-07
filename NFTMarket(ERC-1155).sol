@@ -487,6 +487,9 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 price = idToMarketOffers[itemId][offerIndex].offerAmount;
         uint256 tokenId = idToMarketItem[itemId].tokenId;
         address bidder = payable(idToMarketOffers[itemId][offerIndex].bidder);
+
+        //add total volumeTraded
+        volumeTraded = volumeTraded + price;
         
         uint256 fees = SafeMath.div(price,100).mul(saleFeePercentage);
 
@@ -671,6 +674,9 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         require(idToMarketItem[itemId].isSold==false, "This item is already sold.");
         require(idToMarketItem[itemId].cancelled==false, "This item is not for sale.");
         require(idToMarketItem[itemId].seller!=msg.sender , "Cannot buy your own item.");
+        
+        //add total volumeTraded
+        volumeTraded = volumeTraded + price;
 
         // take fees and transfer the balance to the seller (TODO)
         uint256 fees = SafeMath.div(price,100).mul(saleFeePercentage);

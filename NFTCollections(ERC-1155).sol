@@ -1137,8 +1137,12 @@ pragma solidity >=0.6.0 <0.8.0;
 contract Terraworld is ERC1155, Ownable {
   // Hashes of meme pictures on IPFS
   string[] public hashes;
+  // Collection Logo
+  string public logo;
   // CollectionName
   string public name;
+  // CollectionSymbol
+  string public symbol = "NFT Token";
   // Mapping for enforcing unique hashes
   mapping(string => bool) _hashExists;
 
@@ -1157,6 +1161,7 @@ contract Terraworld is ERC1155, Ownable {
 
   constructor(string memory _name, string memory _collectionUri) public ERC1155(_collectionUri) {
       name = _name;
+      logo = _collectionUri;
   }
 
   function safeTransferFrom(
