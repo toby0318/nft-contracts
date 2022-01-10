@@ -1185,7 +1185,7 @@ contract Terraworld is ERC1155, Ownable {
   event minting(uint256 id, string indexed hash, string indexed uri, uint256 amount);
 
   constructor(string memory _name, string memory _collectionUri) public ERC1155(_collectionUri) {
-      name = _name.concat(" NFT");
+      name = _name.concat(" Collection");
       logo = _collectionUri;
       symbol = _name;
   }
