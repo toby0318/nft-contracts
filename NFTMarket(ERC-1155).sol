@@ -415,6 +415,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         address payable bidder;
         uint256 offerAmount;
         uint256 offerTime;
+        uint256 tokenAmount;
         bool cancelled;
         bool accepted;
     }
@@ -432,6 +433,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 price;
         bool isSold;
         bool cancelled;
+        uint256 soldAmount;
     }
 
     mapping(uint256 => MarketItem) public idToMarketItem;
@@ -470,13 +472,14 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
     );
 
     // offers
-     function makeOffer(uint256 itemId) public payable nonReentrant{
+     function makeOffer(uint256 itemId, uint256 tokenAmount) public payable nonReentrant{
         require(itemId > 0 && itemId<=_itemIds.current(), "Invalid item id.");
         require(idToMarketItem[itemId].isSold==false && idToMarketItem[itemId].cancelled==false , "This item is not for sale.");
         require(idToMarketItem[itemId].seller!=msg.sender , "Can't bid on your own item.");
+        require(tokenAmount >0 && tokenAmount <= idToMarketItem[itemId].amount , "Invalid amount.");
         require(msg.value>0, "Can't offer nothing.");
         uint256 offerIndex = idToMarketOffers[itemId].length;
-        idToMarketOffers[itemId].push(MarketOffer(offerIndex,payable(msg.sender),msg.value,block.timestamp,false, false));
+        idToMarketOffers[itemId].push(MarketOffer(offerIndex,payable(msg.sender),msg.value,block.timestamp,tokenAmount,false, false));
     }
         
     function acceptOffer(uint256 itemId, uint256 offerIndex) public nonReentrant{
@@ -505,12 +508,14 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         
         idToMarketItem[itemId].seller.transfer(saleAmount);
         
+        uint256 amount = idToMarketItem[itemId].amount;
         if(idToMarketItem[itemId].hasAmount)
-            IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this),  bidder, tokenId, idToMarketItem[itemId].amount, "");
+            IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this),  bidder, tokenId, amount, "");
         else
             IERC721(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this),  bidder, tokenId);
         
         idToMarketItem[itemId].isSold = true;
+        idToMarketItem[itemId].soldAmount = amount;
         idToMarketItem[itemId].buyer = payable(bidder);
         _itemsSold.increment();
 
@@ -524,17 +529,65 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
                 break;
             }
         }
-
+        string memory category = idToMarketItem[itemId].category;
         emit MarketSaleCreated(
             itemId,
             idToMarketItem[itemId].nftContract,
             tokenId,
             idToMarketItem[itemId].seller,
             msg.sender,
-            idToMarketItem[itemId].category,
+            category,
             price
         );
         
+        //create new marketitem
+        if(amount < idToMarketItem[itemId].amount)
+        {
+            uint256 newAmount = idToMarketItem[itemId].amount.sub(amount);
+            uint256 perPrice = idToMarketItem[itemId].price.div(idToMarketItem[itemId].amount);
+            uint256 newPrice = perPrice.mul(newAmount);
+            cloneMarketItem(itemId, newAmount, newPrice);
+        }
+    }
+
+    function cloneMarketItem(uint256 itemId, uint256 newAmount, uint256 newPrice) internal {        
+        address nftContract = idToMarketItem[itemId].nftContract;
+        address seller = idToMarketItem[itemId].seller;
+        uint8 kind = idToMarketItem[itemId].kind;
+        bool hasAmount = idToMarketItem[itemId].hasAmount;
+        string memory category = idToMarketItem[itemId].category;
+        uint256 tokenId = idToMarketItem[itemId].tokenId;
+        _itemIds.increment();
+        uint256 newItemId = _itemIds.current();
+
+        uint256 _newPrice = newPrice;
+        idToMarketItem[newItemId] = MarketItem(
+            newItemId,
+            nftContract,
+            tokenId,
+            newAmount,
+            payable(seller),
+            payable(address(0)), // No owner for the item
+            category,
+            kind,
+            hasAmount,
+            _newPrice,
+            false,
+            false,
+            0
+        );
+        contractToTokenToItemId[idToMarketItem[itemId].nftContract][tokenId].push(newItemId);
+        emit MarketItemCreated(
+            newItemId,
+            nftContract,
+            tokenId,
+            seller,
+            address(0),
+            category,
+            kind,
+            hasAmount,
+            _newPrice
+        );
     }
     
     function cancelOffer(uint256 itemId, uint256 offerIndex) public nonReentrant{
@@ -612,7 +665,8 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             hasAmount,
             price,
             false,
-            false
+            false,
+            0
         );
         if(hasAmount)
             IERC1155(nftContract).safeTransferFrom(msg.sender, address(this), tokenId, amount, "");
@@ -659,16 +713,16 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         //TODO emit
     }
 
-    function createMarketSale(uint256 itemId)
+    function createMarketSale(uint256 itemId, uint256 amount)
         public
         payable
         nonReentrant
     {
-        uint256 price = idToMarketItem[itemId].price;
         uint256 tokenId = idToMarketItem[itemId].tokenId;
-        uint256 amount = idToMarketItem[itemId].amount;
+        require(amount > 0 && amount <= idToMarketItem[itemId].amount, "Invalid amount");
+        uint256 price = idToMarketItem[itemId].price.div(idToMarketItem[itemId].amount).mul(amount);
         require(
-            msg.value == price,
+            msg.value >= price,
             "Please make the price to be same as listing price"
         );
         require(idToMarketItem[itemId].isSold==false, "This item is already sold.");
@@ -694,6 +748,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         else
             IERC721(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, tokenId);
         idToMarketItem[itemId].isSold = true;
+        idToMarketItem[itemId].soldAmount = amount;
         idToMarketItem[itemId].buyer = payable(msg.sender);
         _itemsSold.increment();
         uint256[] storage marketItems = contractToTokenToItemId[idToMarketItem[itemId].nftContract][idToMarketItem[itemId].tokenId];
@@ -716,7 +771,15 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             idToMarketItem[itemId].category,
             price
         );
+        //create new marketitem
         
+        //create new marketitem
+        if(amount < idToMarketItem[itemId].amount)
+        {
+            uint256 newAmount = idToMarketItem[itemId].amount.sub(amount);
+            uint256 newPrice = idToMarketItem[itemId].price.sub(price);
+            cloneMarketItem(itemId, newAmount, newPrice);
+        }
     }
 
     // returns all of the current items for sale
@@ -745,14 +808,14 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 currentIndex = 0;
 
         for (uint256 i = 0; i < totalItemCount; i++) {
-            if (idToMarketItem[i + 1].buyer == msg.sender) {
+            if (idToMarketItem[i + 1].buyer == msg.sender && idToMarketItem[i + 1].cancelled == false && idToMarketItem[i + 1].isSold == true) {
                 itemCount += 1;
             }
         }
 
         MarketItem[] memory marketItems = new MarketItem[](itemCount);
         for (uint256 i = 0; i < totalItemCount; i++) {
-            if (idToMarketItem[i + 1].buyer == msg.sender) {
+            if (idToMarketItem[i + 1].buyer == msg.sender && idToMarketItem[i + 1].cancelled == false && idToMarketItem[i + 1].isSold == true) {
                 uint256 currentId = idToMarketItem[i + 1].itemId;
                 MarketItem storage currentItem = idToMarketItem[currentId];
                 marketItems[currentIndex] = currentItem;
@@ -770,14 +833,14 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 currentIndex = 0;
 
         for (uint256 i = 0; i < totalItemCount; i++) {
-            if (idToMarketItem[i + 1].seller == msg.sender) {
+            if (idToMarketItem[i + 1].seller == msg.sender && idToMarketItem[i + 1].cancelled == false && idToMarketItem[i + 1].isSold == true) {
                 itemCount += 1; // No dynamic length. Predefined length has to be made
             }
         }
 
         MarketItem[] memory marketItems = new MarketItem[](itemCount);
         for (uint256 i = 0; i < totalItemCount; i++) {
-            if (idToMarketItem[i + 1].seller == msg.sender) {
+            if (idToMarketItem[i + 1].seller == msg.sender && idToMarketItem[i + 1].cancelled == false && idToMarketItem[i + 1].isSold == true) {
                 uint256 currentId = idToMarketItem[i + 1].itemId;
                 MarketItem storage currentItem = idToMarketItem[currentId];
                 marketItems[currentIndex] = currentItem;
@@ -826,6 +889,16 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             }
         }
         return marketItems;
+    }
+
+    function getAveragePrice(address nftContract, uint256 tokenId) external view returns(uint256){
+        uint256[] storage marketItems = contractToTokenToItemId[nftContract][tokenId];
+        uint256 price;
+        for(uint i = 0; i < marketItems.length; i++)
+        {
+            price = price.add(idToMarketItem[marketItems[i]].price);
+        }
+        return price.div(marketItems.length);
     }
     
     // administration functions
