@@ -379,6 +379,69 @@ abstract contract NFTReceiver is ERC165 {
     }
 }
 
+/**
+ * @dev Interface of the ERC20 standard as defined in the EIP.
+ */
+interface IERC20 {
+    /**
+     * @dev Returns the amount of tokens in existence.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns the amount of tokens owned by `account`.
+     */
+    function balanceOf(address account) external view returns (uint256);
+
+    /**
+     * @dev Moves `amount` tokens from the caller's account to `to`.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transfer(address to, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Returns the remaining number of tokens that `spender` will be
+     * allowed to spend on behalf of `owner` through {transferFrom}. This is
+     * zero by default.
+     *
+     * This value changes when {approve} or {transferFrom} are called.
+     */
+    function allowance(address owner, address spender) external view returns (uint256);
+
+    /**
+     * @dev Sets `amount` as the allowance of `spender` over the caller's tokens.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * IMPORTANT: Beware that changing an allowance with this method brings the risk
+     * that someone may use both the old and the new allowance by unfortunate
+     * transaction ordering. One possible solution to mitigate this race
+     * condition is to first reduce the spender's allowance to 0 and set the
+     * desired value afterwards:
+     * https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
+     *
+     * Emits an {Approval} event.
+     */
+    function approve(address spender, uint256 amount) external returns (bool);
+
+    /**
+     * @dev Moves `amount` tokens from `from` to `to` using the
+     * allowance mechanism. `amount` is then deducted from the caller's
+     * allowance.
+     *
+     * Returns a boolean value indicating whether the operation succeeded.
+     *
+     * Emits a {Transfer} event.
+     */
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) external returns (bool);
+}
 
 contract NFTMarket is ReentrancyGuard,NFTReceiver {
     
@@ -405,7 +468,10 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
     uint256 public totalSellerFee = 0; // Total fee from sellers
     uint8 public sellerFee = 0; // 10: 1%, 100: 10% 
 
-    constructor() {
+    address public wETH;
+
+    constructor(address _wETH) {
+        wETH = _wETH;
         owner = msg.sender;
     }
 
@@ -430,6 +496,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         string category;
         uint8 kind; // 0:fixed price sale ,1: available for auction
         bool hasAmount; // true: erc1155, false: erc721
+        IERC20 currency;
         uint256 price;
         bool isSold;
         bool cancelled;
@@ -450,6 +517,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         string category,
         uint8 kind,
         bool hasAmount,
+        IERC20 currency,
         uint256 price
     );
     
@@ -560,6 +628,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         _itemIds.increment();
         uint256 newItemId = _itemIds.current();
 
+        IERC20 currency = idToMarketItem[itemId].currency;
         uint256 _newPrice = newPrice;
         idToMarketItem[newItemId] = MarketItem(
             newItemId,
@@ -571,6 +640,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             category,
             kind,
             hasAmount,
+            currency,
             _newPrice,
             false,
             false,
@@ -586,6 +656,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             category,
             kind,
             hasAmount,
+            currency,
             _newPrice
         );
     }
@@ -645,6 +716,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 amount,
         uint8 kind,
         bool hasAmount,
+        IERC20 currency,
         uint256 price,
         string calldata category
     ) public payable nonReentrant {
@@ -663,6 +735,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             category,
             kind,
             hasAmount,
+            currency,
             price,
             false,
             false,
@@ -683,6 +756,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             category,
             kind,
             hasAmount,
+            currency,
             price
         );
     }
@@ -771,7 +845,6 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             idToMarketItem[itemId].category,
             price
         );
-        //create new marketitem
         
         //create new marketitem
         if(amount < idToMarketItem[itemId].amount)
