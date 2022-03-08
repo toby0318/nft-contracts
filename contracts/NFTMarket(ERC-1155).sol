@@ -468,10 +468,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
     uint256 public totalSellerFee = 0; // Total fee from sellers
     uint8 public sellerFee = 0; // 10: 1%, 100: 10% 
 
-    address public wETH;
-
-    constructor(address _wETH) {
-        wETH = _wETH;
+    constructor() {
         owner = msg.sender;
     }
 
@@ -494,7 +491,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         address payable seller;
         address payable buyer;
         string category;
-        uint8 kind; // 0:fixed price sale ,1: available for auction
+        uint8 kind; // 0:fixed price sale ,1: enable auction
         bool hasAmount; // true: erc1155, false: erc721
         IERC20 currency;
         uint256 price;
@@ -503,7 +500,14 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 soldAmount;
     }
 
+    struct MarketAuctionItem {
+        uint256 flashPrice;
+        uint256 startTime;
+        uint256 endTime;
+    }
+
     mapping(uint256 => MarketItem) public idToMarketItem;
+    mapping(uint256 => MarketAuctionItem) public idToMarketAuctionItem;
     mapping(address => mapping(uint256 => uint256[])) public contractToTokenToItemId;
 
     mapping(uint256 => MarketOffer[]) private idToMarketOffers;
@@ -512,13 +516,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 indexed itemId,
         address indexed nftContract,
         uint256 indexed tokenId,
-        address seller,
-        address owner,
-        string category,
-        uint8 kind,
-        bool hasAmount,
-        IERC20 currency,
-        uint256 price
+        address seller
     );
     
      event MarketSaleCreated(
@@ -540,17 +538,42 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
     );
 
     // offers
-     function makeOffer(uint256 itemId, uint256 tokenAmount) public payable nonReentrant{
+    function makeOffer(uint256 itemId, uint256 tokenAmount, uint256 offerPrice) public payable nonReentrant{
         require(itemId > 0 && itemId<=_itemIds.current(), "Invalid item id.");
         require(idToMarketItem[itemId].isSold==false && idToMarketItem[itemId].cancelled==false , "This item is not for sale.");
         require(idToMarketItem[itemId].seller!=msg.sender , "Can't bid on your own item.");
         require(tokenAmount >0 && tokenAmount <= idToMarketItem[itemId].amount , "Invalid amount.");
-        require(msg.value>0, "Can't offer nothing.");
+        IERC20 _currency = idToMarketItem[itemId].currency;
+        require(address(_currency) == address(0) || msg.value>0, "Can't offer nothing.");
+        uint256 _offerPrice = msg.value;
+        if (address(_currency) != address(0)) {
+            _currency.transferFrom(msg.sender, address(this), offerPrice);
+            _offerPrice = offerPrice;
+        }
         uint256 offerIndex = idToMarketOffers[itemId].length;
-        idToMarketOffers[itemId].push(MarketOffer(offerIndex,payable(msg.sender),msg.value,block.timestamp,tokenAmount,false, false));
+        if (idToMarketItem[itemId].kind == 1) {
+            require(idToMarketAuctionItem[itemId].endTime == 0 || block.timestamp < idToMarketAuctionItem[itemId].endTime, "Auction was over.");
+            uint256 _lastPrice = idToMarketItem[itemId].price;
+            for(uint i = offerIndex - 1; i >=0 ; i--) {
+                if (!idToMarketOffers[itemId][i].cancelled) {
+                    _lastPrice = idToMarketOffers[itemId][i].offerAmount;
+                    break;
+                }
+            }
+            require(_offerPrice > _lastPrice, "Can't offer nothing.");
+        }
+        idToMarketOffers[itemId].push(MarketOffer(offerIndex,payable(msg.sender),_offerPrice,block.timestamp,tokenAmount,false, false));
+        if (_offerPrice >= idToMarketAuctionItem[itemId].flashPrice) {
+            _acceptOffer(itemId, offerIndex);
+        }
     }
         
     function acceptOffer(uint256 itemId, uint256 offerIndex) public nonReentrant{
+        require(address(idToMarketItem[itemId].seller) == address(msg.sender), "You are not the seller.");
+        _acceptOffer(itemId, offerIndex);
+    }
+
+    function _acceptOffer(uint256 itemId, uint256 offerIndex) internal {
         require(offerIndex<=idToMarketOffers[itemId].length, "Invalid offer index");
         require(idToMarketItem[itemId].isSold==false && idToMarketItem[itemId].cancelled==false , "This item is not for sale.");
         require(idToMarketOffers[itemId][offerIndex].accepted==false && idToMarketOffers[itemId][offerIndex].cancelled==false, "Already accepted or cancelled.");
@@ -558,6 +581,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         uint256 price = idToMarketOffers[itemId][offerIndex].offerAmount;
         uint256 tokenId = idToMarketItem[itemId].tokenId;
         address bidder = payable(idToMarketOffers[itemId][offerIndex].bidder);
+        address seller = idToMarketItem[itemId].seller;
 
         //add total volumeTraded
         volumeTraded = volumeTraded + price;
@@ -568,13 +592,16 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
 
         if (discountManager!=address(0x0)){
             // how much discount does this user get?
-            uint256 feeDiscountPercent = IDiscountManager(discountManager).getDiscount(msg.sender);
+            uint256 feeDiscountPercent = IDiscountManager(discountManager).getDiscount(seller);
             fees = fees.div(100).mul(feeDiscountPercent);
         }
         
         uint256 saleAmount = price.sub(fees);
-        
-        idToMarketItem[itemId].seller.transfer(saleAmount);
+
+        if (address(idToMarketItem[itemId].currency) == address(0))
+            payable(seller).transfer(saleAmount);
+        else
+            idToMarketItem[itemId].currency.transfer(idToMarketItem[itemId].seller, saleAmount);
         
         uint256 amount = idToMarketItem[itemId].amount;
         if(idToMarketItem[itemId].hasAmount)
@@ -585,10 +612,11 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         idToMarketItem[itemId].isSold = true;
         idToMarketItem[itemId].soldAmount = amount;
         idToMarketItem[itemId].buyer = payable(bidder);
+        cancelOffers(itemId);
         _itemsSold.increment();
 
         uint256[] storage marketItems = contractToTokenToItemId[idToMarketItem[itemId].nftContract][idToMarketItem[itemId].tokenId];
-        for(uint i =0; i <= marketItems.length; i++)
+        for(uint i = 0; i <= marketItems.length; i++)
         {
             if(marketItems[i] == itemId)
             {
@@ -602,18 +630,19 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             itemId,
             idToMarketItem[itemId].nftContract,
             tokenId,
-            idToMarketItem[itemId].seller,
-            msg.sender,
+            seller,
+            bidder,
             category,
             price
         );
         
         //create new marketitem
-        if(amount < idToMarketItem[itemId].amount)
+        uint _preAmount = idToMarketItem[itemId].amount;
+        uint _prePrice = idToMarketItem[itemId].price;
+        if(amount < _preAmount)
         {
-            uint256 newAmount = idToMarketItem[itemId].amount.sub(amount);
-            uint256 perPrice = idToMarketItem[itemId].price.div(idToMarketItem[itemId].amount);
-            uint256 newPrice = perPrice.mul(newAmount);
+            uint256 newAmount = _preAmount.sub(amount);
+            uint256 newPrice = _prePrice.div(_preAmount).mul(newAmount);
             cloneMarketItem(itemId, newAmount, newPrice);
         }
     }
@@ -646,29 +675,32 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             false,
             0
         );
+        idToMarketAuctionItem[newItemId] = MarketAuctionItem(
+            0,
+            0,
+            0
+        );
         contractToTokenToItemId[idToMarketItem[itemId].nftContract][tokenId].push(newItemId);
         emit MarketItemCreated(
             newItemId,
             nftContract,
             tokenId,
-            seller,
-            address(0),
-            category,
-            kind,
-            hasAmount,
-            currency,
-            _newPrice
+            seller
         );
     }
     
     function cancelOffer(uint256 itemId, uint256 offerIndex) public nonReentrant{
         require(idToMarketOffers[itemId][offerIndex].bidder==msg.sender && idToMarketOffers[itemId][offerIndex].cancelled==false , "Wrong bidder or offer is already cancelled");
         require(idToMarketOffers[itemId][offerIndex].accepted==false, "Already accepted.");
-        
+
+        IERC20 currency = idToMarketItem[itemId].currency;   
         address bidder = idToMarketOffers[itemId][offerIndex].bidder;
 
-        idToMarketOffers[itemId][offerIndex].cancelled = true;
-        payable(bidder).transfer(idToMarketOffers[itemId][offerIndex].offerAmount);
+        idToMarketOffers[itemId][offerIndex].cancelled = true;        
+        if (address(currency) == address(0))
+            payable(bidder).transfer(idToMarketOffers[itemId][offerIndex].offerAmount);
+        else
+            currency.transfer(bidder, idToMarketOffers[itemId][offerIndex].offerAmount);
 
         //TODO emit
     }
@@ -718,6 +750,9 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         bool hasAmount,
         IERC20 currency,
         uint256 price,
+        uint256 flashPrice,
+        uint256 startTime,
+        uint256 endTime,
         string calldata category
     ) public payable nonReentrant {
         require(price > 0, "No item for free here");
@@ -740,6 +775,11 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             false,
             false,
             0
+        );        
+        idToMarketAuctionItem[itemId] = MarketAuctionItem(
+            flashPrice,
+            startTime,
+            endTime
         );
         if(hasAmount)
             IERC1155(nftContract).safeTransferFrom(msg.sender, address(this), tokenId, amount, "");
@@ -751,13 +791,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
             itemId,
             nftContract,
             tokenId,
-            msg.sender,
-            address(0),
-            category,
-            kind,
-            hasAmount,
-            currency,
-            price
+            msg.sender
         );
     }
     
@@ -768,6 +802,7 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         require(idToMarketItem[itemId].cancelled==false && idToMarketItem[itemId].isSold==false);
         require(IERC1155(idToMarketItem[itemId].nftContract).balanceOf(address(this), idToMarketItem[itemId].tokenId) > 0); // should never fail
         idToMarketItem[itemId].cancelled=true;
+        cancelOffers(itemId);
          _itemsCancelled.increment();
         if(idToMarketItem[itemId].hasAmount)
             IERC1155(idToMarketItem[itemId].nftContract).safeTransferFrom(address(this), msg.sender, idToMarketItem[itemId].tokenId, idToMarketItem[itemId].amount, "");
@@ -785,6 +820,23 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         }
 
         //TODO emit
+    }
+
+    function cancelOffers(uint256 itemId) internal {
+        require(idToMarketItem[itemId].isSold || idToMarketItem[itemId].cancelled, "Can't cancel offers.");
+        IERC20 currency = idToMarketItem[itemId].currency;
+        uint256 offerLength = idToMarketOffers[itemId].length;
+        for(uint i = 0; i < offerLength; i++) {
+            MarketOffer memory offer = idToMarketOffers[itemId][i];
+            if (offer.accepted == false && offer.cancelled == false) {
+                address bidder = idToMarketOffers[itemId][i].bidder;
+                idToMarketOffers[itemId][i].cancelled = true;
+                if (address(currency) == address(0))
+                    payable(bidder).transfer(idToMarketOffers[itemId][i].offerAmount);
+                else
+                    currency.transfer(bidder, idToMarketOffers[itemId][i].offerAmount);
+            }
+        }
     }
 
     function createMarketSale(uint256 itemId, uint256 amount)
@@ -998,8 +1050,11 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         sellerFee = _fee;
     }
 
-    function withDraw() external onlyOwner {
-        payable(owner).transfer(payable(address(this)).balance);
+    function withDraw(IERC20 token) external onlyOwner {
+        if(address(token) == address(0))
+            token.transfer(owner, token.balanceOf(address(this)));
+        else
+            payable(owner).transfer(payable(address(this)).balance);
     }
 }
 
