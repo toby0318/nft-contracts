@@ -1220,7 +1220,7 @@ abstract contract Ownable is Context {
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract NFTToken is ERC721Enumerable, Ownable{
+contract NFTToken721 is ERC721Enumerable, Ownable{
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     address beneficiary;

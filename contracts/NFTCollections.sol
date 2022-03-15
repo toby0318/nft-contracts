@@ -1220,7 +1220,7 @@ abstract contract Ownable is Context {
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract NFTToken is ERC721Enumerable, Ownable{
+contract NFTToken721 is ERC721Enumerable, Ownable{
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
     address beneficiary;
@@ -1382,14 +1382,14 @@ contract NFTToken is ERC721Enumerable, Ownable{
     }
 }
 
-contract collections {
+contract collections721 {
     mapping(address=>address[]) public myCollections;
     address[] public allCollections;
     event CollectionCreated(address indexed creator, address indexed newCollection);
     constructor(){}
     function createCollection(string memory _logoURI, string memory _featuredURI, string memory _bannerURI, string memory _collectionName, string memory _customURI) external returns (address collection){
         
-        collection = address(new NFTToken(_logoURI, _featuredURI, _bannerURI, _collectionName, _customURI));
+        collection = address(new NFTToken721(_logoURI, _featuredURI, _bannerURI, _collectionName, _customURI));
         myCollections[msg.sender].push(collection);
         allCollections.push(collection);
 

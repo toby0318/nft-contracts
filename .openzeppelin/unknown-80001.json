@@ -1,0 +1,1977 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x26b2e0Ab21D6a917a4cE489e5d57dc28c585D4c4",
+    "txHash": "0xa804738eed52facc27bd23bd6f8b055ada8089c413bcb325702a67af96faf7fd"
+  },
+  "proxies": [
+    {
+      "address": "0x0beb946343628F8C9f0476c930C55248347bd991",
+      "txHash": "0x978c7c0b1ff797fe211590669d6c19f0c4cf4a8b1d44e86c2d26e6f096b5c690",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x23b3c07E0fec26c5AfC643f13E5De045F853a611",
+      "txHash": "0x856d8ef609b917e992d05fa01b3a82ee6e661c006d172c63b697f24f0b6d4db0",
+      "kind": "transparent"
+    },
+    {
+      "address": "0x62724E7929a2596770278A6422F80841595D4f61",
+      "txHash": "0x2159b694a86fc434872de68fb3ae853ffd6b6562522529b018b5a5077e9615ad",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "21d6c73a36adc4af1d6439229e4bc0438cca87ec814912560dd137e90962c4e5": {
+      "address": "0x2adfaa605bB25256025394dAC86B2F04FE33b6e1",
+      "txHash": "0xcf0c95ed8455eefaca943db57d974f02a7bea564905a76dedff54d3dbb814319",
+      "layout": {
+        "storage": [
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuard",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:214"
+          },
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:286"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:44"
+          },
+          {
+            "label": "_itemIds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_struct(Counter)3482_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:458"
+          },
+          {
+            "label": "_itemsSold",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_struct(Counter)3482_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:459"
+          },
+          {
+            "label": "_itemsCancelled",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_struct(Counter)3482_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:460"
+          },
+          {
+            "label": "_offerIds",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_struct(Counter)3482_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:463"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:465"
+          },
+          {
+            "label": "discountManager",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:466"
+          },
+          {
+            "label": "saleFeePercentage",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:468"
+          },
+          {
+            "label": "volumeTraded",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:469"
+          },
+          {
+            "label": "totalSellerFee",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:470"
+          },
+          {
+            "label": "sellerFee",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint8",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:471"
+          },
+          {
+            "label": "idToMarketItem",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)802_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:516"
+          },
+          {
+            "label": "idToMarketAuctionItem",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:517"
+          },
+          {
+            "label": "contractToTokenToItemId",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:518"
+          },
+          {
+            "label": "idToMarketOffers",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:520"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_array(t_struct(MarketOffer)772_storage)dyn_storage": {
+            "label": "struct NFTMarket.MarketOffer[]"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_bytes4": {
+            "label": "bytes4"
+          },
+          "t_contract(IERC20)675": {
+            "label": "contract IERC20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => uint256[]))"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketOffer[])"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])"
+          },
+          "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketAuctionItem)"
+          },
+          "t_mapping(t_uint256,t_struct(MarketItem)802_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketItem)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)3482_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketAuctionItem)809_storage": {
+            "label": "struct NFTMarket.MarketAuctionItem",
+            "members": [
+              {
+                "label": "flashPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketItem)802_storage": {
+            "label": "struct NFTMarket.MarketItem",
+            "members": [
+              {
+                "label": "itemId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftContract",
+                "type": "t_address"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "seller",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "buyer",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "kind",
+                "type": "t_uint8"
+              },
+              {
+                "label": "hasAmount",
+                "type": "t_bool"
+              },
+              {
+                "label": "currency",
+                "type": "t_contract(IERC20)675"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "isSold",
+                "type": "t_bool"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "soldAmount",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketOffer)772_storage": {
+            "label": "struct NFTMarket.MarketOffer",
+            "members": [
+              {
+                "label": "offerId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "bidder",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "offerAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "offerTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "accepted",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          }
+        }
+      }
+    },
+    "8b788f7ace9ed3b0ee9b306e6e35e04ccd4790dd34ff345f969b6ffa697d1560": {
+      "address": "0xe31a58Abc055Bff987121484Eee10B6bfE024e02",
+      "txHash": "0x762d198860013a65b3e92d5e87708c9f8c38209cf33537bd9b5065a864ea4648",
+      "layout": {
+        "storage": [
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuard",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:214"
+          },
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:286"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:44"
+          },
+          {
+            "label": "_itemIds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_struct(Counter)3512_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:458"
+          },
+          {
+            "label": "_itemsSold",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_struct(Counter)3512_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:459"
+          },
+          {
+            "label": "_itemsCancelled",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_struct(Counter)3512_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:460"
+          },
+          {
+            "label": "_offerIds",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_struct(Counter)3512_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:463"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:465"
+          },
+          {
+            "label": "discountManager",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:466"
+          },
+          {
+            "label": "saleFeePercentage",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:468"
+          },
+          {
+            "label": "volumeTraded",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:469"
+          },
+          {
+            "label": "totalSellerFee",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:470"
+          },
+          {
+            "label": "sellerFee",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint8",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:471"
+          },
+          {
+            "label": "idToMarketItem",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)802_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:516"
+          },
+          {
+            "label": "idToMarketAuctionItem",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:517"
+          },
+          {
+            "label": "contractToTokenToItemId",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:518"
+          },
+          {
+            "label": "idToMarketOffers",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:520"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_array(t_struct(MarketOffer)772_storage)dyn_storage": {
+            "label": "struct NFTMarket.MarketOffer[]"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_bytes4": {
+            "label": "bytes4"
+          },
+          "t_contract(IERC20)675": {
+            "label": "contract IERC20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => uint256[]))"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketOffer[])"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])"
+          },
+          "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketAuctionItem)"
+          },
+          "t_mapping(t_uint256,t_struct(MarketItem)802_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketItem)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)3512_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketAuctionItem)809_storage": {
+            "label": "struct NFTMarket.MarketAuctionItem",
+            "members": [
+              {
+                "label": "flashPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketItem)802_storage": {
+            "label": "struct NFTMarket.MarketItem",
+            "members": [
+              {
+                "label": "itemId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftContract",
+                "type": "t_address"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "seller",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "buyer",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "kind",
+                "type": "t_uint8"
+              },
+              {
+                "label": "hasAmount",
+                "type": "t_bool"
+              },
+              {
+                "label": "currency",
+                "type": "t_contract(IERC20)675"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "isSold",
+                "type": "t_bool"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "soldAmount",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketOffer)772_storage": {
+            "label": "struct NFTMarket.MarketOffer",
+            "members": [
+              {
+                "label": "offerId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "bidder",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "offerAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "offerTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "accepted",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          }
+        }
+      }
+    },
+    "c31a3a759143ee0fd50a6ffa1315580bc25eb90934876b5b12c054c2e4ccbdfa": {
+      "address": "0xEfa1041F8051704C33714edB082d58AEfcA7cE53",
+      "txHash": "0x6a9014438b8247e9a8f7ef79d1e7178a97cbbc85b94b6c7c84c11fca70244a4d",
+      "layout": {
+        "storage": [
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuard",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:214"
+          },
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:286"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:44"
+          },
+          {
+            "label": "_itemIds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_struct(Counter)3522_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:458"
+          },
+          {
+            "label": "_itemsSold",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_struct(Counter)3522_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:459"
+          },
+          {
+            "label": "_itemsCancelled",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_struct(Counter)3522_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:460"
+          },
+          {
+            "label": "_offerIds",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_struct(Counter)3522_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:463"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:465"
+          },
+          {
+            "label": "discountManager",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:466"
+          },
+          {
+            "label": "saleFeePercentage",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:468"
+          },
+          {
+            "label": "volumeTraded",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:469"
+          },
+          {
+            "label": "totalSellerFee",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:470"
+          },
+          {
+            "label": "sellerFee",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint8",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:471"
+          },
+          {
+            "label": "idToMarketItem",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)802_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:516"
+          },
+          {
+            "label": "idToMarketAuctionItem",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:517"
+          },
+          {
+            "label": "contractToTokenToItemId",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:518"
+          },
+          {
+            "label": "idToMarketOffers",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:520"
+          },
+          {
+            "label": "xxx",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:547"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_array(t_struct(MarketOffer)772_storage)dyn_storage": {
+            "label": "struct NFTMarket.MarketOffer[]"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_bytes4": {
+            "label": "bytes4"
+          },
+          "t_contract(IERC20)675": {
+            "label": "contract IERC20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => uint256[]))"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketOffer[])"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])"
+          },
+          "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketAuctionItem)"
+          },
+          "t_mapping(t_uint256,t_struct(MarketItem)802_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketItem)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)3522_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketAuctionItem)809_storage": {
+            "label": "struct NFTMarket.MarketAuctionItem",
+            "members": [
+              {
+                "label": "flashPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketItem)802_storage": {
+            "label": "struct NFTMarket.MarketItem",
+            "members": [
+              {
+                "label": "itemId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftContract",
+                "type": "t_address"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "seller",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "buyer",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "kind",
+                "type": "t_uint8"
+              },
+              {
+                "label": "hasAmount",
+                "type": "t_bool"
+              },
+              {
+                "label": "currency",
+                "type": "t_contract(IERC20)675"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "isSold",
+                "type": "t_bool"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "soldAmount",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketOffer)772_storage": {
+            "label": "struct NFTMarket.MarketOffer",
+            "members": [
+              {
+                "label": "offerId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "bidder",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "offerAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "offerTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "accepted",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          }
+        }
+      }
+    },
+    "eb89eaf3948a3605bafdc0b568ff7585d0a2a01c47fd65e851a9a38987748fc3": {
+      "address": "0x48EA48727d0d9feD59ce48E554b717d11EeC8cfC",
+      "txHash": "0xd587760fac520762c5dc91ffd0427b88c4899ceed67178730e99e1be316d6953",
+      "layout": {
+        "storage": [
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuard",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:214"
+          },
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:286"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:44"
+          },
+          {
+            "label": "_itemIds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:458"
+          },
+          {
+            "label": "_itemsSold",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:459"
+          },
+          {
+            "label": "_itemsCancelled",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:460"
+          },
+          {
+            "label": "_offerIds",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:463"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:465"
+          },
+          {
+            "label": "discountManager",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:466"
+          },
+          {
+            "label": "saleFeePercentage",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:468"
+          },
+          {
+            "label": "volumeTraded",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:469"
+          },
+          {
+            "label": "totalSellerFee",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:470"
+          },
+          {
+            "label": "sellerFee",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint8",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:471"
+          },
+          {
+            "label": "idToMarketItem",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)802_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:516"
+          },
+          {
+            "label": "idToMarketAuctionItem",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:517"
+          },
+          {
+            "label": "contractToTokenToItemId",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:518"
+          },
+          {
+            "label": "idToMarketOffers",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:520"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_array(t_struct(MarketOffer)772_storage)dyn_storage": {
+            "label": "struct NFTMarket.MarketOffer[]"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_bytes4": {
+            "label": "bytes4"
+          },
+          "t_contract(IERC20)675": {
+            "label": "contract IERC20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => uint256[]))"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketOffer[])"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])"
+          },
+          "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketAuctionItem)"
+          },
+          "t_mapping(t_uint256,t_struct(MarketItem)802_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketItem)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)3517_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketAuctionItem)809_storage": {
+            "label": "struct NFTMarket.MarketAuctionItem",
+            "members": [
+              {
+                "label": "flashPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketItem)802_storage": {
+            "label": "struct NFTMarket.MarketItem",
+            "members": [
+              {
+                "label": "itemId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftContract",
+                "type": "t_address"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "seller",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "buyer",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "kind",
+                "type": "t_uint8"
+              },
+              {
+                "label": "hasAmount",
+                "type": "t_bool"
+              },
+              {
+                "label": "currency",
+                "type": "t_contract(IERC20)675"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "isSold",
+                "type": "t_bool"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "soldAmount",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketOffer)772_storage": {
+            "label": "struct NFTMarket.MarketOffer",
+            "members": [
+              {
+                "label": "offerId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "bidder",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "offerAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "offerTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "accepted",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          }
+        }
+      }
+    },
+    "ada330251d373c80c96fd3d5fd4f606a5a60167709aaca80365221e84f9a9430": {
+      "address": "0x89ceBaE40CE6D62b3C31e5a1D173C120eA45bEc3",
+      "txHash": "0x49e4acd22233d929364031af9d4523c940356d2d0e55a0f0693a8109b0419933",
+      "layout": {
+        "storage": [
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuard",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:214"
+          },
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:286"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:44"
+          },
+          {
+            "label": "_itemIds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:458"
+          },
+          {
+            "label": "_itemsSold",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:459"
+          },
+          {
+            "label": "_itemsCancelled",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:460"
+          },
+          {
+            "label": "_offerIds",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_struct(Counter)3517_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:463"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:465"
+          },
+          {
+            "label": "discountManager",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:466"
+          },
+          {
+            "label": "saleFeePercentage",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:468"
+          },
+          {
+            "label": "volumeTraded",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:469"
+          },
+          {
+            "label": "totalSellerFee",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:470"
+          },
+          {
+            "label": "sellerFee",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint8",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:471"
+          },
+          {
+            "label": "idToMarketItem",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)802_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:516"
+          },
+          {
+            "label": "idToMarketAuctionItem",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:517"
+          },
+          {
+            "label": "contractToTokenToItemId",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:518"
+          },
+          {
+            "label": "idToMarketOffers",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:520"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_array(t_struct(MarketOffer)772_storage)dyn_storage": {
+            "label": "struct NFTMarket.MarketOffer[]"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_bytes4": {
+            "label": "bytes4"
+          },
+          "t_contract(IERC20)675": {
+            "label": "contract IERC20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => uint256[]))"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(MarketOffer)772_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketOffer[])"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])"
+          },
+          "t_mapping(t_uint256,t_struct(MarketAuctionItem)809_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketAuctionItem)"
+          },
+          "t_mapping(t_uint256,t_struct(MarketItem)802_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketItem)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)3517_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketAuctionItem)809_storage": {
+            "label": "struct NFTMarket.MarketAuctionItem",
+            "members": [
+              {
+                "label": "flashPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketItem)802_storage": {
+            "label": "struct NFTMarket.MarketItem",
+            "members": [
+              {
+                "label": "itemId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftContract",
+                "type": "t_address"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "seller",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "buyer",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "kind",
+                "type": "t_uint8"
+              },
+              {
+                "label": "hasAmount",
+                "type": "t_bool"
+              },
+              {
+                "label": "currency",
+                "type": "t_contract(IERC20)675"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "isSold",
+                "type": "t_bool"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "soldAmount",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketOffer)772_storage": {
+            "label": "struct NFTMarket.MarketOffer",
+            "members": [
+              {
+                "label": "offerId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "bidder",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "offerAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "offerTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "accepted",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          }
+        }
+      }
+    },
+    "85faa210b6dcdbf7d840656e4ce0a6d1c87e57de3d9a9ad4691335e8c06e04f0": {
+      "address": "0xeCf7d2388DC008F60d4DD10c16E8Cdf91091fCE4",
+      "txHash": "0x553ed25d30cd6c04d7ca893940baa301f86b085df166c892c0114d5a5409895b",
+      "layout": {
+        "storage": [
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuard",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:214"
+          },
+          {
+            "label": "_supportedInterfaces",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_mapping(t_bytes4,t_bool)",
+            "contract": "ERC165",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:286"
+          },
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:39"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "2",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:44"
+          },
+          {
+            "label": "_itemIds",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_struct(Counter)3556_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:458"
+          },
+          {
+            "label": "_itemsSold",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_struct(Counter)3556_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:459"
+          },
+          {
+            "label": "_itemsCancelled",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_struct(Counter)3556_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:460"
+          },
+          {
+            "label": "_offerIds",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_struct(Counter)3556_storage",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:463"
+          },
+          {
+            "label": "owner",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:465"
+          },
+          {
+            "label": "discountManager",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_address",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:466"
+          },
+          {
+            "label": "saleFeePercentage",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:468"
+          },
+          {
+            "label": "volumeTraded",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:469"
+          },
+          {
+            "label": "totalSellerFee",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_uint256",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:470"
+          },
+          {
+            "label": "sellerFee",
+            "offset": 0,
+            "slot": "12",
+            "type": "t_uint8",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:471"
+          },
+          {
+            "label": "isCurrency",
+            "offset": 0,
+            "slot": "13",
+            "type": "t_mapping(t_contract(IERC20)675,t_bool)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:472"
+          },
+          {
+            "label": "idToMarketItem",
+            "offset": 0,
+            "slot": "14",
+            "type": "t_mapping(t_uint256,t_struct(MarketItem)807_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:517"
+          },
+          {
+            "label": "idToMarketAuctionItem",
+            "offset": 0,
+            "slot": "15",
+            "type": "t_mapping(t_uint256,t_struct(MarketAuctionItem)814_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:518"
+          },
+          {
+            "label": "contractToTokenToItemId",
+            "offset": 0,
+            "slot": "16",
+            "type": "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:519"
+          },
+          {
+            "label": "idToMarketOffers",
+            "offset": 0,
+            "slot": "17",
+            "type": "t_mapping(t_uint256,t_array(t_struct(MarketOffer)777_storage)dyn_storage)",
+            "contract": "NFTMarket",
+            "src": "contracts\\NFTMarket(ERC-1155).sol:521"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address"
+          },
+          "t_address_payable": {
+            "label": "address payable"
+          },
+          "t_array(t_struct(MarketOffer)777_storage)dyn_storage": {
+            "label": "struct NFTMarket.MarketOffer[]"
+          },
+          "t_array(t_uint256)dyn_storage": {
+            "label": "uint256[]"
+          },
+          "t_bool": {
+            "label": "bool"
+          },
+          "t_bytes4": {
+            "label": "bytes4"
+          },
+          "t_contract(IERC20)675": {
+            "label": "contract IERC20"
+          },
+          "t_mapping(t_address,t_mapping(t_uint256,t_array(t_uint256)dyn_storage))": {
+            "label": "mapping(address => mapping(uint256 => uint256[]))"
+          },
+          "t_mapping(t_bytes4,t_bool)": {
+            "label": "mapping(bytes4 => bool)"
+          },
+          "t_mapping(t_contract(IERC20)675,t_bool)": {
+            "label": "mapping(contract IERC20 => bool)"
+          },
+          "t_mapping(t_uint256,t_array(t_struct(MarketOffer)777_storage)dyn_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketOffer[])"
+          },
+          "t_mapping(t_uint256,t_array(t_uint256)dyn_storage)": {
+            "label": "mapping(uint256 => uint256[])"
+          },
+          "t_mapping(t_uint256,t_struct(MarketAuctionItem)814_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketAuctionItem)"
+          },
+          "t_mapping(t_uint256,t_struct(MarketItem)807_storage)": {
+            "label": "mapping(uint256 => struct NFTMarket.MarketItem)"
+          },
+          "t_string_storage": {
+            "label": "string"
+          },
+          "t_struct(Counter)3556_storage": {
+            "label": "struct Counters.Counter",
+            "members": [
+              {
+                "label": "_value",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketAuctionItem)814_storage": {
+            "label": "struct NFTMarket.MarketAuctionItem",
+            "members": [
+              {
+                "label": "flashPrice",
+                "type": "t_uint256"
+              },
+              {
+                "label": "startTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "endTime",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketItem)807_storage": {
+            "label": "struct NFTMarket.MarketItem",
+            "members": [
+              {
+                "label": "itemId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "nftContract",
+                "type": "t_address"
+              },
+              {
+                "label": "tokenId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "amount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "seller",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "buyer",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "category",
+                "type": "t_string_storage"
+              },
+              {
+                "label": "kind",
+                "type": "t_uint8"
+              },
+              {
+                "label": "hasAmount",
+                "type": "t_bool"
+              },
+              {
+                "label": "currency",
+                "type": "t_contract(IERC20)675"
+              },
+              {
+                "label": "price",
+                "type": "t_uint256"
+              },
+              {
+                "label": "isSold",
+                "type": "t_bool"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "soldAmount",
+                "type": "t_uint256"
+              }
+            ]
+          },
+          "t_struct(MarketOffer)777_storage": {
+            "label": "struct NFTMarket.MarketOffer",
+            "members": [
+              {
+                "label": "offerId",
+                "type": "t_uint256"
+              },
+              {
+                "label": "bidder",
+                "type": "t_address_payable"
+              },
+              {
+                "label": "offerAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "offerTime",
+                "type": "t_uint256"
+              },
+              {
+                "label": "tokenAmount",
+                "type": "t_uint256"
+              },
+              {
+                "label": "cancelled",
+                "type": "t_bool"
+              },
+              {
+                "label": "accepted",
+                "type": "t_bool"
+              }
+            ]
+          },
+          "t_uint256": {
+            "label": "uint256"
+          },
+          "t_uint8": {
+            "label": "uint8"
+          }
+        }
+      }
+    }
+  }
+}

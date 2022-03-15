@@ -1,6 +1,4 @@
-const { ethers, waffle } = require("hardhat");
-
-const IERC20 = require('../artifacts/contracts/BegoikoERC20.sol/IERC20.json').abi;
+const { ethers, waffle, upgrades } = require("hardhat");
 
 async function main() {
 
@@ -8,21 +6,7 @@ async function main() {
 
     const provider = waffle.provider;
 
-    var DAO = { address: process.env.DAO };
     console.log('Deploying contracts with the account: ' + deployer.address);
-    console.log('Deploying contracts with the account: ' + DAO.address);
-
-    const daiAddress = "0xef45e6E3159e9F302D2B85f6E777791d7B7e98d8";
-
-    // const ohm = new ethers.Contract(ohmAddress, OHMContractABI, deployer);
-
-    const dai = new ethers.Contract(daiAddress, IERC20, deployer);
-
-    // Deploy OHM
-    const OHM = await ethers.getContractFactory('BegoikoERC20Token');
-    const ohm = await OHM.deploy();
-    await ohm.deployed();
-
     /* ----------- test ------------- */
     ////////////////////////////////////
 
@@ -30,28 +14,21 @@ async function main() {
     console.log(nonce);
     var startTIme = new Date().getTime();
 
-    console.log("--------------deploy Begoiko finish----------------")
+    const market = await ethers.getContractFactory("NFTMarket");
+    // deploy contracts
+    const proxy = await upgrades.deployProxy(market, [], { nonce: nonce++ });
+    await proxy.deployed();
+    console.log("MARKET_ADDRESS: ", proxy.address);
+    // upgrades contracts 
+    // const proxy = await upgrades.upgradeProxy("0x62724E7929a2596770278A6422F80841595D4f61", market);
 
-    // Deploy Presale
-    const Presale = await ethers.getContractFactory('Presale');
-    const presale = await Presale.deploy({ nonce: nonce++ });
-    tx = await presale.initialize(ohm.address, dai.address, '10000000', '100000000000', DAO.address, { nonce: nonce++ });
-    await tx.wait();
-    tx = await ohm.setPresale(presale.address, { nonce: nonce++ });
-    await tx.wait();
-    tx = await ohm.statePresale(true, { nonce: nonce++ });
-    await tx.wait();
+    // const _nfttoken = await ethers.getContractFactory('contracts/NFTBasic(ERC-1155).sol:Terraworld');
+    // const nfttoken = await _nfttoken.deploy("Terra", "Terraworld", { nonce: nonce++ });
+    // console.log("NFT Token:", nfttoken.address);
 
     var end = new Date().getTime();
 
-    console.log("deploy ended ", (Number(end) - startTIme) / 1000)
-
-    // var daiLP = await exchangeFactory.getPair(ohm.address,dai.address);
-    // var wFTMLP = await exchangeFactory.getPair(ohm.address,dai.address);
-
-    console.log("DAI_ADDRESS: ", dai.address);
-    console.log("BEGO_ADDRESS: ", ohm.address);
-    console.log("PRESALE_ADDRESS: ", presale.address);
+    console.log("deploy ended ", (Number(end) - startTIme) / 1000);
 }
 
 main()

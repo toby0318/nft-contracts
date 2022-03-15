@@ -231,7 +231,7 @@ interface IDiscountManager {
 }
 
 
-contract NFTMarket is ReentrancyGuard {
+contract NFTMarket721 is ReentrancyGuard {
     
     using SafeMath for uint256;
     

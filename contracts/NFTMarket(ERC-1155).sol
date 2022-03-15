@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+
 /**
  * @dev Required interface of an ERC1155 compliant contract.
  */
@@ -211,9 +213,9 @@ abstract contract ReentrancyGuard {
 
     uint256 private _status;
 
-    constructor () {
-        _status = _NOT_ENTERED;
-    }
+    // constructor () {
+    //     _status = _NOT_ENTERED;
+    // }
 
     /**
      * @dev Prevents a contract from calling itself, directly or indirectly.
@@ -283,11 +285,11 @@ contract ERC165 is IERC165 {
      */
     mapping(bytes4 => bool) private _supportedInterfaces;
 
-    constructor (){
-        // Derived contracts need only register support for their own interfaces,
-        // we register support for ERC165 itself here
-        _registerInterface(_INTERFACE_ID_ERC165);
-    }
+    // constructor (){
+    //     // Derived contracts need only register support for their own interfaces,
+    //     // we register support for ERC165 itself here
+    //     _registerInterface(_INTERFACE_ID_ERC165);
+    // }
 
     /**
      * @dev See {IERC165-supportsInterface}.
@@ -443,7 +445,7 @@ interface IERC20 {
     ) external returns (bool);
 }
 
-contract NFTMarket is ReentrancyGuard,NFTReceiver {
+contract NFTMarket is ReentrancyGuard,NFTReceiver,Initializable  {
     
     using SafeMath for uint256;
     
@@ -461,15 +463,21 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
     Counters.Counter private _offerIds; // Tracking offers
 
     address public owner; // The owner of the NFTMarket contract 
-    address public discountManager = address(0x0); // a contract that can be callled to discover if there is a discount on the transaction fee.
+    address public discountManager; // a contract that can be callled to discover if there is a discount on the transaction fee.
 
-    uint256 public saleFeePercentage = 5; // Percentage fee paid to team for each sale
-    uint256 public volumeTraded = 0; // Total amount traded
-    uint256 public totalSellerFee = 0; // Total fee from sellers
-    uint8 public sellerFee = 0; // 10: 1%, 100: 10% 
+    uint256 public saleFeePercentage; // Percentage fee paid to team for each sale
+    uint256 public volumeTraded; // Total amount traded
+    uint256 public totalSellerFee; // Total fee from sellers
+    uint8 public sellerFee; // 10: 1%, 100: 10% 
+    mapping(IERC20=>bool) isCurrency;
 
-    constructor() {
+    function initialize() public initializer {
         owner = msg.sender;
+        discountManager = address(0x0);
+        saleFeePercentage = 5;
+        volumeTraded = 0;
+        totalSellerFee = 0;
+        sellerFee = 0;
     }
 
 
@@ -756,7 +764,14 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
         string calldata category
     ) public payable nonReentrant {
         require(price > 0, "No item for free here");
-        require(msg.value >= price.mul(sellerFee).div(1000), "You have to pay seller fee");
+        require(address(currency) == address(0) || isCurrency[currency], "Not approved token.");
+        if (sellerFee > 0) {
+            if (address(currency) == address(0)) {
+                require(msg.value >= price.mul(sellerFee).div(1000), "You have to pay seller fee");
+            } else {
+                currency.transferFrom(msg.sender, address(this), price.mul(sellerFee).div(1000));
+            }
+        }
 
         _itemIds.increment();
         uint256 itemId = _itemIds.current();
@@ -1048,6 +1063,10 @@ contract NFTMarket is ReentrancyGuard,NFTReceiver {
 
     function setSellerFee(uint8 _fee) external onlyOwner {
         sellerFee = _fee;
+    }
+
+    function setCurrency(IERC20 _currency, bool isApproved) external onlyOwner {
+        isCurrency[_currency] = isApproved;
     }
 
     function withDraw(IERC20 token) external onlyOwner {
